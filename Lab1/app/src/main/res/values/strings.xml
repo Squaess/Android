@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Lab1</string>
+    <string name="Labolatoria1">Labolatoria1</string>
+    <string name="heading">Translate the word...</string>
+    <string name="b1">Next</string>
+    <string name="b2">Check</string>
+    <string name="cor">Correct: 0</string>
+</resources>
