@@ -6,4 +6,8 @@
     <string name="b2">Check</string>
     <string name="cor">Correct: 0</string>
     <string name="fai">Failed: 0</string>
+    <string name="ans">Answer</string>
+    <string name="Small">Small</string>
+    <string name="Medium">Medium</string>
+    <string name="Large">Large</string>
 </resources>

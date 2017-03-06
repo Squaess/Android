@@ -30,6 +30,38 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:maxLines="1" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="com.example.bartosz.lab1.MainActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/butID"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true">
+
+        <Button android:id="@+id/sm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Small"
+            android:layout_marginEnd="15dp"
+            android:onClick=""/>
+
+        <Button android:id="@+id/me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Medium"
+            android:layout_marginEnd="15dp"
+            android:onClick=""/>
+
+        <Button android:id="@+id/lg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Large"
+            android:onClick=""/>
+
+    </LinearLayout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context="com.example.bartosz.lab1.MainActivity"
@@ -66,6 +98,13 @@
         android:layout_above="@id/bottom"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="7dp">
+
+        <Button android:id="@+id/answ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ans"
+            android:layout_marginEnd="15dp"
+            android:onClick="answButton"/>
 
         <Button android:id="@+id/b1"
             android:layout_width="wrap_content"
