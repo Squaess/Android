@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private String guess;
     private int row;
     private int col;
-    private int correct;
-    private int failed;
+    private int correct=0;
+    private int failed=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void roll() {
         Random rand =  new Random();
+        int prev = row;
         row = rand.nextInt(toRand);
+        if(prev == row) {
+            row = (row+1)%toRand;
+        }
+        TextView tv1 = (TextView)findViewById(R.id.cb);
+        tv1.setText("Correct: "+ correct);
+        TextView tv2 = (TextView)findViewById(R.id.fb);
+        tv2.setText("Failed: "+ failed);
         col = rand.nextInt(2);
         word = dictionary[row][col];
         TextView tv = (TextView)findViewById(R.id.word);
@@ -58,8 +66,10 @@ public class MainActivity extends AppCompatActivity {
         guess = et.getText().toString();
         if(guess.equals(dictionary[row][(col+1)%2])) {
             Toast.makeText(this, "Correct", Toast.LENGTH_LONG).show();
+            correct++;
         } else {
             Toast.makeText(this, "Failed", Toast.LENGTH_LONG).show();
+            failed++;
         }
         et.setText("");
         roll();

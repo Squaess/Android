@@ -5,4 +5,5 @@
     <string name="b1">Next</string>
     <string name="b2">Check</string>
     <string name="cor">Correct: 0</string>
+    <string name="fai">Failed: 0</string>
 </resources>
