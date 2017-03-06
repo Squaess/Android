@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.bartosz.lab1.MainActivity">
+    tools:context="com.example.bartosz.lab1.MainActivity"
+    android:id="@+id/main">
 
     <TextView android:id="@+id/heading"
         android:layout_width="wrap_content"
@@ -31,45 +32,18 @@
         android:layout_centerVertical="true"
         android:maxLines="1" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.example.bartosz.lab1.MainActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/butID"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true">
 
-        <Button android:id="@+id/sm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Small"
-            android:layout_marginEnd="15dp"
-            android:onClick=""/>
 
-        <Button android:id="@+id/me"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Medium"
-            android:layout_marginEnd="15dp"
-            android:onClick=""/>
-
-        <Button android:id="@+id/lg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Large"
-            android:onClick=""/>
-
-    </LinearLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context="com.example.bartosz.lab1.MainActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/guess"
         android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:id="@+id/tx2">
 
         <TextView android:id="@+id/cb"
             android:layout_width="wrap_content"
@@ -90,12 +64,46 @@
             />
 
     </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="com.example.bartosz.lab1.MainActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tx2"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/buttons1">
+
+        <Button android:id="@+id/sm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Small"
+            android:layout_marginEnd="15dp"
+            android:onClick="small"/>
+
+        <Button android:id="@+id/me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Medium"
+            android:layout_marginEnd="15dp"
+            android:onClick="medium"/>
+
+        <Button android:id="@+id/lg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Large"
+            android:onClick="large"/>
+
+    </LinearLayout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/butID"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bottom"
+        android:layout_below="@id/buttons1"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="7dp">
 
