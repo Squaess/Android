@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -22,35 +23,35 @@ public class MainActivity extends AppCompatActivity {
     public static final int N = 4;
 
     /**
-     *  main layout
+     *  main layout N times linear layout
      */
-    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-
-        root = new RelativeLayout(this);
-        setContentView(root);
-
-        GridLayout.LayoutParams gridParams = new GridLayout.LayoutParams(root.getLayoutParams());
-        gridParams.rowSpec = GridLayout.spec(N,N);
-        gridParams.columnSpec = GridLayout.spec(N,N);
-
-        GridLayout board = new GridLayout(this);
-        board.setLayoutParams(gridParams);
-        board.setColumnCount(N);
-        board.setRowCount(N);
-
-        root.addView(board);
+        setContentView(R.layout.activity_main);
 
         Toast.makeText(this, "OnCreate", Toast.LENGTH_LONG).show();
+        /**
+         * Taking grid layout from XML acticity_main and adding N*N buttons
+         */
+        GridLayout boardlayout = (GridLayout) findViewById(R.id.boardlayout);
+        boardlayout.setRowCount(N);
+        boardlayout.setColumnCount(N);
 
-        for(int i=0; i<N*N; i++) {
-            Button b = new Button(this);
-            b.setText(R.string.b1);
-            board.addView(b);
-        }
+        /**
+         * setting properly N*N board
+         */
+
+//        for(int i=0; i<N*N; i++) {
+//            Button b = new Button(this);
+//            b.setWidth(0);
+//            b.setHeight(0);
+//            b.setText("0");
+//
+//            boardlayout.addView(b);
+//        }
     }
 
     @Override

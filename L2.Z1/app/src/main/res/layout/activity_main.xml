@@ -1,10 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:grid="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingBottom="12dp"
     tools:context="com.example.bartosz.l2z1.MainActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hi"/>
 
+    <GridLayout
+
+        android:id="@+id/boardlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:rowCount="4"
+        android:columnCount="4">
+
+
+        <Button android:text="@string/b1"
+            android:height="0dp"
+            android:width="0dp"
+            android:layout_columnWeight="1" />
+        <Button android:text="@string/b1"
+            android:height="0dp"
+            android:width="0dp"
+            android:layout_columnWeight="1" />
+        <Button android:text="@string/b1"
+            android:height="0dp"
+            android:width="0dp"
+            android:layout_columnWeight=""
+            android:layout_rowWeight="1"/>
+        <Button android:text="@string/b1"
+            android:height="0dp"
+            android:width="0dp"
+            android:layout_columnWeight="1"/>
+        <Button android:text="@string/b1"
+            android:height="0dp"
+            android:width="0dp"
+            android:layout_columnWeight="1" />
+
+
+
+    </GridLayout>
 
 </RelativeLayout>

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">L2.Z1</string>
     <string name="b1">Button!</string>
+    <string name="hi">Hello!</string>
 </resources>
