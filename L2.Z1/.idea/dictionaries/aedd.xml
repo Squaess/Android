@@ -2,6 +2,8 @@
   <dictionary name="aedd">
     <words>
       <w>boardlayout</w>
+      <w>bparams</w>
+      <w>mainparams</w>
     </words>
   </dictionary>
 </component>
