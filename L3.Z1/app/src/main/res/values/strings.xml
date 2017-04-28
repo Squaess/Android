@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">L3.Z1</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="names">
+        <item>Picture 1</item>
+        <item>Picture 2</item>
+        <item>Picture 3</item>
+        <item>Picture 4</item>
+        <item>Picture 5</item>
+        <item>Picture 6</item>
+        <item>Picture 7</item>
+        <item>Picture 8</item>
+        <item>Picture 9</item>
+        <item>Picture 10</item>
+    </string-array>
+    <string name="fragment2">fragment2</string>
+</resources>
