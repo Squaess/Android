@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:id="@+id/tytul"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:labelFor="@+id/editText"
+        android:id="@+id/editText"
+        android:layout_weight="6"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <com.varunest.sparkbutton.SparkButton
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight = "1"
+        android:layout_gravity = "bottom|center"
+        android:id = "@+id/edit_done"
+        app:sparkbutton_activeImage = "@mipmap/accept_img"
+        app:sparkbutton_iconSize = "60dp"
+        app:sparkbutton_primaryColor = "@color/spark_primary_color"
+        app:sparkbutton_secondaryColor = "@color/spark_secondary_color"
+        app:sparkbutton_animationSpeed = "0.7"/>
+</LinearLayout>
