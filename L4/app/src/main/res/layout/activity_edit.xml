@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"/>
 
     <EditText
+        android:gravity="top|start"
         android:labelFor="@+id/editText"
         android:id="@+id/editText"
         android:layout_weight="6"

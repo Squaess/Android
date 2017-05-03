@@ -37,6 +37,7 @@
         android:gravity="center"/>
 
     <AutoCompleteTextView
+        android:gravity="top|start"
         android:labelFor="@+id/tekst"
         android:id="@+id/tekst"
         android:layout_weight="1"
