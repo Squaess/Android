@@ -1,6 +1,7 @@
 package com.example.bartosz.l5_z1;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -9,6 +10,8 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+
 import java.util.Random;
 
 /**
@@ -16,6 +19,10 @@ import java.util.Random;
  */
 
 public class ExampleView extends View {
+    private final int WIDTH = 350;
+    private final int HEIGHT = 100;
+    private final int PADDING = 10;
+    private final int SPEED = 3;
     Handler h;
     Paint font;
     private float x;
@@ -24,8 +31,8 @@ public class ExampleView extends View {
 
     public ExampleView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        x = 80;
-        y = 200;
+        x = Resources.getSystem().getDisplayMetrics().widthPixels/2;
+        y = Resources.getSystem().getDisplayMetrics().heightPixels-PADDING-HEIGHT;
         font = new Paint();
         font.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
         font.setTextSize(40);
@@ -35,7 +42,7 @@ public class ExampleView extends View {
     @Override
     protected void onDraw(Canvas canvas){
         super.onDraw(canvas);
-        canvas.drawRect( x, y, x+50, y+50, font);
+        canvas.drawRect( x-(WIDTH/2), y, x+(WIDTH/2), y+HEIGHT, font);
     }
 
     public void invalidate(){
@@ -47,10 +54,10 @@ public class ExampleView extends View {
 
     public void invalidate(int i) {
         if(i<0){
-            x-=1;
+            x-=SPEED;
             super.invalidate();
         }else {
-            x+=1;
+            x+=SPEED;
             super.invalidate();
         }
     }
