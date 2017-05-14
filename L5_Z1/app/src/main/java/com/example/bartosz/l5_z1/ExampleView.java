@@ -3,34 +3,26 @@ package com.example.bartosz.l5_z1;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Typeface;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Random;
-
-import static android.view.DragEvent.ACTION_DRAG_STARTED;
 
 /**
  * Created by Bartosz on 08.05.2017
  */
 
 public class ExampleView extends View {
-    int counter = 0;
+    int counter = 4;
 
     Deck deck;
     Ball ball;
 
     ArrayList<Deck> blocks;
     private final int PADDING = 10;
-    private final int SPEED = 10;
 
     Handler h;
 
@@ -74,9 +66,18 @@ public class ExampleView extends View {
     protected void onDraw(Canvas canvas){
         super.onDraw(canvas);
         canvas.drawRect( deck.getX()-(deck.WIDTH/2), deck.getY() - (deck.HEIGHT/2), deck.getX()+(deck.WIDTH/2), deck.getY()+ (deck.HEIGHT/2), deck.getPaint());
-        canvas.drawCircle(ball.getX(), ball.getY(), Ball.r, ball.getPaint());
-        for (Deck d : blocks) {
-            canvas.drawRect(d.getX() - (d.WIDTH/2), d.getY() - (d.HEIGHT/2), d.getX()+(d.WIDTH/2), d.getY()+(d.HEIGHT/2), d.getPaint());
+        if (counter > 0) {
+            if (blocks.isEmpty()) {
+                this.setBackgroundColor(Color.GREEN);
+            } else {
+                canvas.drawCircle(ball.getX(), ball.getY(), Ball.r, ball.getPaint());
+
+                for (Deck d : blocks) {
+                    canvas.drawRect(d.getX() - (d.WIDTH / 2), d.getY() - (d.HEIGHT / 2), d.getX() + (d.WIDTH / 2), d.getY() + (d.HEIGHT / 2), d.getPaint());
+                }
+            }
+        }else {
+                this.setBackgroundColor(Color.RED);
         }
     }
 
@@ -93,7 +94,6 @@ public class ExampleView extends View {
         checkCollision();
         ball.moveBall();
 
-        counter++;
         super.invalidate();
     }
 
@@ -104,38 +104,135 @@ public class ExampleView extends View {
         for(Deck d: blocks) {
             for (Point p : points) {
                 if (d.contains(p.x,p.y)) {
-                    ball.change_direction(d.getX(), d.getY());
+//                    ball.change_direction(d.getX(), d.getY());
+                    changeBallDir(d);
+                    blocks.remove(d);
                     return true;
                 }
             }
-            if ( d.contains(ball.getX(), ball.getY()) ) {
-                ball.change_direction(d.getX(), d.getY());
-                // tutaj jeszcze usunac obiekt z listy;
-                blocks.remove(d);
-                return true;
-            }
+//            if ( d.contains(ball.getX(), ball.getY()) ) {
+//                ball.change_direction(d.getX(), d.getY());
+//                // tutaj jeszcze usunac obiekt z listy;
+//                blocks.remove(d);
+//                return true;
+//            }
         }
         for (Point p : points ) {
             if (deck.contains(p.x, p.y)) {
                 ball.change_direction(deck.getX(), deck.getY());
+//                changeBallDir(deck);
+                return true;
+            }
+        }
+        float width = Resources.getSystem().getDisplayMetrics().widthPixels;
+        float height = Resources.getSystem().getDisplayMetrics().heightPixels;
+        for (Point p : points) {
+            if (p.x <= 0 ) {
+                if (ball.angle < 180){
+
+                    ball.changeAngleAndMove(- (2 * (ball.angle - 90)));
+                }
+                else{
+                    ball.changeAngleAndMove(2 * (270 - ball.angle));
+                }
+                return true;
+            } else if (p.x >= width) {
+                if (ball.angle < 90) {
+
+                    ball.changeAngleAndMove(2 * (90 - ball.angle));
+                } else {
+
+                    ball.changeAngleAndMove(- (2 * (ball.angle - 270)));
+                }
+                return true;
+            } else if (p.y <= 0) {
+
+                if (ball.angle < 90) {
+                    ball.changeAngleAndMove(180 + 2 * (90 - ball.angle));
+                } else {
+
+                    ball.changeAngleAndMove(2 * (180 - ball.angle));
+                }
+                return true;
+            } else if (p.y >= height) {
+                ball.setX(width/2);
+                ball.setY(height-deck.HEIGHT - PADDING);
+                ball.setRandPaint();
+                ball.changeAngleAndMove(-180);
+                counter--;
                 return true;
             }
         }
         return false;
     }
 
-    private void changeBallDir(float obj_x, float obj_y, float x, float y) {
-        if ( x > obj_x && y < obj_x )
+    private void changeBallDir(Deck block) {
+        if ( ball.getX() > block.getX()+(block.WIDTH/2 ) && ball.getY() > ( block.getY() - (block.HEIGHT/2)) && ball.getY() < ( block.getY() + (block.HEIGHT/2) ) )  {
+            //na prawo od klocka odejmuje 90 z angle
+            // lub dodaje w zaleznosci od angle
+            if (ball.angle > 90 && ball.angle < 180) {
+                //zmien angle i oblicz move na ball -90
+
+                ball.changeAngleAndMove(-( 2 * (ball.angle-90)));
+            } else {
+                // zmien angle +90 i oblicz movy
+
+                ball.changeAngleAndMove(2 * (270-ball.angle));
+            }
+        } else if (ball.getX() < block.getX() - (block.WIDTH/2) && ball.getY() > ( block.getY() - (block.HEIGHT/2)) && ball.getY() < ( block.getY() + (block.HEIGHT/2))) {
+            // na lewo od klocka +90 do angle
+            // lub -90 w zaleznosci od angle
+
+            if (ball.angle > 0 && ball.angle < 90) {
+                //zmien angle +90 i movy
+
+                ball.changeAngleAndMove(2 * (90 - ball.angle));
+            } else {
+                //zmien angle -90 i movy
+                ball.changeAngleAndMove(- (2 * (ball.angle - 270)));
+            }
+        } else if ( ball.getY() > block.getY() + (block.HEIGHT/2) && ball.getX() > (block.getX()-(block.WIDTH/2)) && ball.getX() < (block.getX() + (block.WIDTH/2))) {
+            //na dol od klocka
+
+            if (ball.angle > 0 && ball.angle < 90 ) {
+                //angle + 270
+
+                ball.changeAngleAndMove(180 + 2 * (90 - ball.angle));
+            } else {
+                //angle +90
+
+                ball.changeAngleAndMove(2 * (180 - ball.angle));
+            }
+
+        } else if (ball.getY() < block.getY() - (block.HEIGHT/2) && ball.getX() > (block.getX()-(block.WIDTH/2)) && ball.getX() < (block.getX() + (block.WIDTH/2)) ) {
+
+            if (ball.angle > 270 && ball.angle < 360) {
+                // angle -270
+                ball.changeAngleAndMove(-180 - (2 * ball.angle-270));
+            } else {
+
+                //angle -90
+
+                ball.changeAngleAndMove(- (2 * (ball.angle - 180)));
+            }
+        } else  {
+            if (ball.angle > 180 && ball.angle < 360) {
+                ball.changeAngleAndMove(-180);
+            } else ball.changeAngleAndMove(180);
+        }
     }
 
     public void invalidate(int i) {
-        if(i<0){
-            deck.setX(deck.getX()-SPEED);
-            super.invalidate();
-        }else {
-            deck.setX(deck.getX()+SPEED);
-            super.invalidate();
-        }
+//        if(i<0){
+//            deck.setX(deck.getX()-SPEED);
+//            super.invalidate();
+//        }else {
+//            deck.setX(deck.getX()+SPEED);
+//            super.invalidate();
+//        }
+
+        if (i > 0 ) deck.setX(deck.getX()+deck.SPEED);
+        else deck.setX(deck.getX() - deck.SPEED);
     }
 
 
@@ -143,68 +240,84 @@ public class ExampleView extends View {
 
         final float new_x = event.getX();
 
-        if(new_x > deck.getX()-(deck.WIDTH/2) && new_x < deck.getX() + (deck.WIDTH/2)) {
+//        Thread t = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                h = new Handler(Looper.getMainLooper());
+//                if (new_x > deck.getX()) {
+//                    while (new_x > deck.getX()) {
+//                        h.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                invalidate(1);
+//                            }
+//                        });
+//
+//                        try {
+//                            Thread.sleep(20);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                } else if (new_x < deck.getX()) {
+//                    while (new_x < deck.getX()) {
+//                        h.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                invalidate(-1);
+//                            }
+//                        });
+//
+//                        try {
+//                            Thread.sleep(20);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//
+//            }
+//        });
+//        t.start();
 
-            switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                case MotionEvent.ACTION_DOWN:
-                    Toast.makeText(getContext(),"ACTION_DOWN", Toast.LENGTH_SHORT).show();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    Toast.makeText(getContext(),"ACTION_UP", Toast.LENGTH_SHORT).show();
-                    break;
-                case MotionEvent.ACTION_POINTER_DOWN:
-                    Toast.makeText(getContext(),"ACTION_POINTER_DOWN", Toast.LENGTH_SHORT).show();
-                    break;
-                case MotionEvent.ACTION_POINTER_UP:
-                    Toast.makeText(getContext(),"ACTION_POINTER_UP", Toast.LENGTH_SHORT).show();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    Toast.makeText(getContext(),"ACTION_MOVE", Toast.LENGTH_SHORT).show();
-                    break;
-            }
 
-        }
-
-        Thread t = new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-
                 h = new Handler(Looper.getMainLooper());
-                if (new_x > deck.getX()) {
-                    while (new_x > deck.getX()) {
-                        h.post(new Runnable() {
+                if (new_x > ( Resources.getSystem().getDisplayMetrics().widthPixels/2)) {
+                    for (int i = 0; i < 50; i++) {
+                        h.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 invalidate(1);
                             }
-                        });
-
+                        }, 4);
                         try {
-                            Thread.sleep(20);
-                        } catch (InterruptedException e) {
+                            Thread.sleep(4);
+                        } catch (InterruptedException e){
                             e.printStackTrace();
                         }
                     }
-                } else if (new_x < deck.getX()) {
-                    while (new_x < deck.getX()) {
-                        h.post(new Runnable() {
+                } else {
+                    for (int i = 0; i < 50; i++) {
+                        h.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 invalidate(-1);
                             }
-                        });
-
+                        }, 4);
                         try {
-                            Thread.sleep(20);
-                        } catch (InterruptedException e) {
+                            Thread.sleep(4);
+                        } catch (InterruptedException e){
                             e.printStackTrace();
                         }
                     }
                 }
-
             }
         });
-        t.start();
+        thread.start();
         return super.onTouchEvent(event);
     }
 

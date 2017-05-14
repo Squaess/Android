@@ -10,11 +10,12 @@ import java.util.Random;
 
 class Deck {
 
-    int WIDTH = 400;
+    final int SPEED = 2;
+    int WIDTH = 470;
     int HEIGHT = 80;
     private float x;
     private float y;
-    Paint paint;
+    private Paint paint;
 
     Deck(float x, float y) {
         this.x = x;

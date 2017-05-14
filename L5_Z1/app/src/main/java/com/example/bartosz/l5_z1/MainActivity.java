@@ -1,6 +1,7 @@
 package com.example.bartosz.l5_z1;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
@@ -17,6 +18,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //only landscape
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         // going full screen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -39,9 +42,9 @@ public class MainActivity extends Activity {
                         public void run() {
                             view.invalidate();
                         }
-                    }, 12);
+                    }, 5);
                     try {
-                        Thread.sleep(12);
+                        Thread.sleep(5);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

@@ -1,10 +1,7 @@
 package com.example.bartosz.l5_z1;
 
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -14,14 +11,14 @@ import java.util.Random;
 
 class Ball {
 
-    Paint paint;
+    private Paint paint;
     private float x;
     private float y;
     final static float r = 50;
-    final static float SPEED = 5;
+    private final static float SPEED = 3;
     double angle;
-    double move_x;
-    double move_y;
+    private double move_x;
+    private double move_y;
 
     Ball (float x, float y) {
         paint = new Paint();
@@ -44,16 +41,41 @@ class Ball {
         this.y = y;
     }
 
+    void setX(float x){ this.x = x;}
+
     void moveBall() {
         // check() collision and bounds
         y-=move_y;
         x+= move_x;
     }
 
+    void changeAngleAndMove(double difference) {
+        angle = angle + difference;
+
+        move_y = Math.sin(Math.toRadians(angle)) * SPEED;
+        move_x = Math.cos(Math.toRadians(angle)) * SPEED;
+    }
+
     void change_direction(float obj_x, float obj_y) {
 
-        float diff_x = x - obj_x;
-        float diff_y = y - obj_y;
+        float diff_x = Math.abs(x - obj_x);
+        float diff_y = Math.abs(y - obj_y);
+
+        float tang = diff_y / diff_x;
+
+        angle = Math.toDegrees(Math.atan(tang));
+
+        move_y = Math.sin(Math.toRadians(angle)) * SPEED;
+        move_x = Math.cos(Math.toRadians(angle)) * SPEED;
+
+        if (x < obj_x){
+            double diff = 2 * (90 - angle);
+            angle +=  diff;
+
+
+            move_y = Math.sin(Math.toRadians(angle)) * SPEED;
+            move_x = Math.cos(Math.toRadians(angle)) * SPEED;
+        }
 
         // co z zerami jeśli diff_x bedzie zerem to sie wyjebie
 
@@ -79,33 +101,33 @@ class Ball {
 //
 
         // ------------------------------------
-        if(diff_x == 0) {
-            move_x = 0;
-            if (angle <= 180) {
-                move_y = -SPEED;
-                angle = 270;
-            } else {
-                move_y = SPEED;
-                angle = 90;
-            }
-        } else if (diff_y == 0) {
-            move_y = 0;
-            if(angle > 90 && angle < 270) {
-                move_x = SPEED;
-                angle = 0;
-            } else {
-                move_x = -SPEED;
-                angle = 180;
-            }
-        } else {
-
-            float tang = diff_y / diff_x;
-
-            angle = Math.toDegrees(Math.atan(tang));
-
-            move_y = Math.sin(Math.toRadians(angle)) * SPEED;
-            move_x = Math.cos(Math.toRadians(angle)) * SPEED;
-        }
+//        if(diff_x == 0) {
+//            move_x = 0;
+//            if (angle <= 180) {
+//                move_y = -SPEED;
+//                angle = 270;
+//            } else {
+//                move_y = SPEED;
+//                angle = 90;
+//            }
+//        } else if (diff_y == 0) {
+//            move_y = 0;
+//            if(angle > 90 && angle < 270) {
+//                move_x = SPEED;
+//                angle = 0;
+//            } else {
+//                move_x = -SPEED;
+//                angle = 180;
+//            }
+//        } else {
+//
+//            float tang = diff_y / diff_x;
+//
+//            angle = Math.toDegrees(Math.atan(tang));
+//
+//            move_y = Math.sin(Math.toRadians(angle)) * SPEED;
+//            move_x = Math.cos(Math.toRadians(angle)) * SPEED;
+//        }
 
         Log.d("angle", Double.toString(angle));
     }
