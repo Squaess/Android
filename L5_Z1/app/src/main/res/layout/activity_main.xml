@@ -7,9 +7,15 @@
     android:layout_height="match_parent"
     tools:context="com.example.bartosz.l5_z1.MainActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="Hellloooooo"/>
+
     <com.example.bartosz.l5_z1.ExampleView
         android:id="@+id/mv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>
