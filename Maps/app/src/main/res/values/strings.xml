@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Maps</string>
     <string name="title_activity_maps">Map</string>
-    <string name="permission_acces_fine_rational">Please add location permission.</string>
+    <string name="CONNECT">Connect</string>
     <string name="ok">OK!!!</string>
-    <string name="permission_acces_coarse_rational">Please do me e favor and accept this</string>
+    <string name="CLEAR">Clear</string>
     <string name="READY">Map is loaded!!</string>
 </resources>

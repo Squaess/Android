@@ -1,24 +1,55 @@
-<LinearLayout
+<FrameLayout
     android:id="@+id/main_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="match_parent"
-        android:layout_height="65dp">
-    </Spinner>
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="65dp">
+        </Spinner>
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        tools:context="com.example.bartosz.maps.MapsActivity" />
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            tools:context="com.example.bartosz.maps.MapsActivity" />
 
-</LinearLayout>
+    </LinearLayout>
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:onClick="deletePolyline"
+        android:id="@+id/clear_button"
+        style="@style/wrapping_button"
+        android:text="@string/CLEAR"
+        app:bootstrapBrand="danger"
+        app:bootstrapSize="lg"
+        app:roundedCorners = "true"
+        android:layout_gravity="end|bottom"
+
+        />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:onClick="makePolyline"
+        android:id="@+id/connect_button"
+        style="@style/wrapping_button"
+        android:text="@string/CONNECT"
+        app:bootstrapBrand= "warning"
+        app:bootstrapSize="lg"
+        app:roundedCorners = "true"
+        android:layout_gravity="start|bottom"
+
+        />
+
+</FrameLayout>

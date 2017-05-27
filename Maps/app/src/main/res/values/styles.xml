@@ -8,4 +8,22 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="example_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_margin">@dimen/default_padding</item>
+        <item name="android:paddingBottom">32dp</item>
+    </style>
+
+    <style name="wrapping_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">@dimen/default_padding</item>
+        <item name="android:layout_marginBottom">@dimen/default_padding</item>
+        <item name="android:layout_marginLeft">@dimen/default_padding</item>
+    </style>
+
+    <dimen name="default_padding">16dp</dimen>>
+    <dimen name="micro_padding">4dp</dimen>
 </resources>

@@ -10,27 +10,32 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
-import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback, ActivityCompat.OnRequestPermissionsResultCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback, ActivityCompat.OnRequestPermissionsResultCallback, AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "MainActivity";
     private GoogleMap mMap;
@@ -42,26 +47,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int REQUEST_FINE_LOCATION = 0;
     private Spinner spinner;
 
+    City[] cities;
+    MarkerOptions marker;
+
+    private ArrayList<LatLng> points;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TypefaceProvider.registerDefaultIconSets();
         setContentView(R.layout.activity_maps);
+
         mLayout = findViewById(R.id.main_layout);
-        spinner = (Spinner) findViewById(R.id.spinner);
 
+        String data = readRaw(R.raw.miasta);
         Gson gson = new Gson();
+        cities = gson.fromJson(data, City[].class);
 
-        City[] cities = gson.fromJson(, City[].class);
-        ArrayList<String> miasta = new ArrayList<>();
-        for (City c : cities){
-            miasta.add(c.name);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, miasta);
-        spinner.setAdapter(adapter);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    private String readRaw(int fileID) {
+        InputStream is = getResources().openRawResource(fileID);
+        Writer writer = new StringWriter();
+        char[] buffer = new char[1024];
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            int n;
+            while ((n = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, n);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return writer.toString();
     }
 
     void addActGpsLocation() {
@@ -84,7 +113,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         // Add a marker in Wroclaw and move the camera
         LatLng wroclaw = new LatLng(myLat, myLng);
-        mMap.addMarker(new MarkerOptions().position(wroclaw).title("Marker in Sydney"));
+        marker = new MarkerOptions().position(wroclaw).title("Marker in Sydney");
+        mMap.addMarker(marker);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(wroclaw, 13));
     }
 
@@ -136,7 +166,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             // Add a marker in Wroclaw and move the camera
             LatLng wroclaw = new LatLng(myLat, myLng);
-            mMap.addMarker(new MarkerOptions().position(wroclaw).title("Marker in Sydney"));
+            marker = new MarkerOptions().position(wroclaw).title("Marker in Sydney");
+            mMap.addMarker(marker);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(wroclaw, 13));
             googleMap.setOnMapLoadedCallback(this);
         }
@@ -147,6 +178,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Snackbar.make(mLayout, R.string.READY,
                 Snackbar.LENGTH_SHORT)
                 .show();
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayList<String> miasta = new ArrayList<>();
+        for (City c : cities){
+            miasta.add(c.name);
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, miasta);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -170,7 +210,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Wroclaw and move the camera
         LatLng wroclaw = new LatLng(myLat, myLng);
-        mMap.addMarker(new MarkerOptions().position(wroclaw).title("Marker in Sydney"));
+        marker = new MarkerOptions().position(wroclaw).title("Marker in Sydney");
+        mMap.addMarker(marker);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(wroclaw, 13));
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Log.i(TAG,String.valueOf(position));
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(cities[position].Lat, cities[position].Lng)));
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    public void makePolyline(View view) {
+        if(points == null){
+            points = new ArrayList<>();
+            points.add(mMap.getCameraPosition().target);
+        } else {
+            points.add(mMap.getCameraPosition().target);
+            mMap.addPolyline(new PolylineOptions().addAll(points));
+        }
+    }
+
+    public void deletePolyline(View view) {
+        points.clear();
+        mMap.clear();
+        mMap.addMarker(marker);
     }
 }
