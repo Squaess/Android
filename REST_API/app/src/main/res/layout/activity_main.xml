@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.bartosz.rest_api.MainActivity">
+
+    <com.varunest.sparkbutton.SparkButton
+        android:id="@+id/chuck"
+        android:layout_gravity= "start|top"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:sparkbutton_activeImage="@drawable/ic_thumb"
+        app:sparkbutton_iconSize = "60dp"
+        app:sparkbutton_primaryColor="@color/facebook_primary_color"
+        app:sparkbutton_secondaryColor="@color/facebook_secondary_color"
+        />
+    <com.varunest.sparkbutton.SparkButton
+        android:id="@+id/imageB"
+        android:layout_gravity="end|top"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:sparkbutton_activeImage="@drawable/ic_star_on"
+        app:sparkbutton_animationSpeed=".85"
+        app:sparkbutton_iconSize="60dp"
+        app:sparkbutton_inActiveImage="@drawable/ic_star_off"
+        />
+
+    <LinearLayout
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="80dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_width="match_parent">
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"/>
+        <ScrollView
+
+            android:layout_weight="3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+            <GridLayout
+                android:id="@+id/imagesLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="3">
+
+            </GridLayout>
+        </ScrollView>
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="60dp" />
+
+    </LinearLayout>
+</FrameLayout>
