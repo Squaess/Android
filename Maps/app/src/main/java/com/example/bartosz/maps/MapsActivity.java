@@ -3,25 +3,35 @@ package com.example.bartosz.maps;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
@@ -35,7 +45,13 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback, ActivityCompat.OnRequestPermissionsResultCallback, AdapterView.OnItemSelectedListener {
+public class MapsActivity extends FragmentActivity implements
+        OnMapReadyCallback,
+        GoogleMap.OnMapLoadedCallback,
+        ActivityCompat.OnRequestPermissionsResultCallback,
+        AdapterView.OnItemSelectedListener,
+        GoogleMap.OnMarkerDragListener,
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
 
     private static final String TAG = "MainActivity";
     private GoogleMap mMap;
@@ -49,8 +65,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     City[] cities;
     MarkerOptions marker;
+    Marker m;
+    CircleOptions circle;
+    Circle c;
 
+    // points to make polyline
     private ArrayList<LatLng> points;
+
+    // to customwindow
+    private RadioGroup mOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +81,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         TypefaceProvider.registerDefaultIconSets();
         setContentView(R.layout.activity_maps);
 
+        mOptions = (RadioGroup) findViewById(R.id.custom_info_window_options);
+        mOptions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                if (m != null && m.isInfoWindowShown()) {
+                    // Refresh the info window when the info window's content has changed.
+                    m.showInfoWindow();
+                }
+            }
+        });
         mLayout = findViewById(R.id.main_layout);
 
         String data = readRaw(R.raw.miasta);
         Gson gson = new Gson();
         cities = gson.fromJson(data, City[].class);
 
+        spinner = (Spinner) findViewById(R.id.spinner);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -131,8 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setOnMapLoadedCallback(this);
-
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
         double myLat = -33.865143;
         double myLng = 151.209900;
 
@@ -164,11 +197,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 myLat = loc.getLatitude();
                 myLng = loc.getLongitude();
             }
-            // Add a marker in Wroclaw and move the camera
-            LatLng wroclaw = new LatLng(myLat, myLng);
-            marker = new MarkerOptions().position(wroclaw).title("Marker in Sydney");
+            // Add a marker in your gps location and move the camera
+            LatLng location = new LatLng(myLat, myLng);
+            marker = new MarkerOptions().position(location).title("Marker in GPS location");
             mMap.addMarker(marker);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(wroclaw, 13));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
             googleMap.setOnMapLoadedCallback(this);
         }
     }
@@ -178,8 +211,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Snackbar.make(mLayout, R.string.READY,
                 Snackbar.LENGTH_SHORT)
                 .show();
+        mMap.setOnMarkerDragListener(this);
+        marker.draggable(true);
+        mMap.setOnMapClickListener(this);
+        mMap.setOnMapLongClickListener(this);
+        mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+            @Override
+            public void onCircleClick(Circle circle) {
+                circle.setStrokeColor(circle.getStrokeColor() ^ 0x00ffffff);
+            }
+        });
+        circle = new CircleOptions()
+                .center(marker.getPosition())
+                .radius(1000)
+                .strokeColor(Color.CYAN)
+                .fillColor(0x220000FF)
+                .strokeWidth(5).clickable(true);
+        c = mMap.addCircle(circle);
 
-        spinner = (Spinner) findViewById(R.id.spinner);
         ArrayList<String> miasta = new ArrayList<>();
         for (City c : cities){
             miasta.add(c.name);
@@ -237,8 +286,118 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void deletePolyline(View view) {
-        points.clear();
+        if(points != null) points.clear();
         mMap.clear();
         mMap.addMarker(marker);
+        mMap.addCircle(circle);
+    }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        this.marker = new MarkerOptions().position(marker.getPosition()).draggable(true).title("After drag");
+        this.circle = new CircleOptions()
+                .center(marker.getPosition())
+                .radius(1000)
+                .strokeColor(Color.CYAN)
+                .fillColor(0x220000FF)
+                .strokeWidth(5).clickable(true);
+        review();
+    }
+
+    private void review() {
+        mMap.clear();
+        if(points != null){
+            mMap.addPolyline(new PolylineOptions().addAll(points));
+        }
+        mMap.addMarker(marker);
+        mMap.addCircle(circle);
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        this.marker = new MarkerOptions().position(latLng).draggable(true).title("After longClick");
+        this.circle = new CircleOptions()
+                .center(marker.getPosition())
+                .radius(1000)
+                .strokeColor(Color.CYAN)
+                .fillColor(0x220000FF)
+                .strokeWidth(5).clickable(true);
+        review();
+    }
+
+    class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter{
+
+        private final View mWindow;
+
+        private final View mContents;
+
+        CustomInfoWindowAdapter() {
+            mWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+            mContents = getLayoutInflater().inflate(R.layout.custom_info_contents, null);
+        }
+
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            if (mOptions.getCheckedRadioButtonId() != R.id.custom_info_window) {
+                // This means that getInfoContents will be called.
+                return null;
+            }
+            render(marker, mWindow);
+            return mWindow;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            if (mOptions.getCheckedRadioButtonId() != R.id.custom_info_contents) {
+                // This means that the default info contents will be used.
+                return null;
+            }
+            render(marker, mContents);
+            return mContents;
+        }
+
+        private void render(Marker marker, View view) {
+            int badge = R.mipmap.badge_info_window;
+            ((ImageView) view.findViewById(R.id.badge)).setImageResource(badge);
+            TextView titleUi = ((TextView) view.findViewById(R.id.title));
+
+            String title = marker.getTitle();
+
+            if (title != null) {
+                // Spannable string allows us to edit the formatting of the text.
+                SpannableString titleText = new SpannableString(title);
+                titleText.setSpan(new ForegroundColorSpan(Color.RED), 0, titleText.length(), 0);
+                titleUi.setText(titleText);
+            } else {
+                titleUi.setText("");
+            }
+
+            String snippet = marker.getSnippet();
+            TextView snippetUi = ((TextView) view.findViewById(R.id.snippet));
+            if (snippet != null && snippet.length() > 12) {
+                SpannableString snippetText = new SpannableString(snippet);
+                snippetText.setSpan(new ForegroundColorSpan(Color.MAGENTA), 0, 10, 0);
+                snippetText.setSpan(new ForegroundColorSpan(Color.BLUE), 12, snippet.length(), 0);
+                snippetUi.setText(snippetText);
+            } else {
+                snippetUi.setText("");
+            }
+        }
     }
 }

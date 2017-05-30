@@ -5,4 +5,7 @@
     <string name="ok">OK!!!</string>
     <string name="CLEAR">Clear</string>
     <string name="READY">Map is loaded!!</string>
+    <string name="custom_info_contents">Custom info contents</string>
+    <string name="custom_info_window">Custom info window</string>
+    <string name="default_info_window">Default info window</string>
 </resources>

@@ -40,6 +40,33 @@
 
         />
 
+    <RadioGroup
+        android:background="@color/colorUnderRadioGroup"
+        android:layout_gravity="center|bottom"
+        android:id="@+id/custom_info_window_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/default_info_window"
+            android:checked="true"
+            android:text="@string/default_info_window"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+        <RadioButton
+            android:id="@+id/custom_info_contents"
+            android:text="@string/custom_info_contents"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+        <RadioButton
+            android:id="@+id/custom_info_window"
+            android:text="@string/custom_info_window"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+    </RadioGroup>
+
     <com.beardedhen.androidbootstrap.BootstrapButton
         android:onClick="makePolyline"
         android:id="@+id/connect_button"
